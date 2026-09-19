@@ -4,3 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+aes = "0.8"
+ecb = "0.1"
+sha2 = "0.10"
