@@ -1,10 +1,10 @@
-// function to read the plain file then encrypt adn write it to file
+// function to read the plain file then encrypt and write it to new file
 
 use crate::encrypt::encrypt_bytes;
 use std::io::{self, Read, Write};
 use std::fs::File;
 
-pub fn process(key: &[u8; 32], mut plainfile: File, mut cipherfile: File) -> io::Result<()> {
+pub fn process(key: &[u8; 32], mut plainfile: File, cipherfile: &mut File) -> io::Result<()> {
     let mut buffer = [0u8; 1024];
 
     loop {
@@ -17,5 +17,6 @@ pub fn process(key: &[u8; 32], mut plainfile: File, mut cipherfile: File) -> io:
         cipherfile.write_all(&cipher_bytes)?;
 
     }
+
 Ok(())
 }
