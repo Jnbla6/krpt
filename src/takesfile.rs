@@ -4,7 +4,7 @@ use crate::encrypt::encrypt_bytes;
 use std::io::{self, Read, Write};
 use std::fs::File;
 
-pub fn process(key: &[u8; 32], mut plainfile: File, cipherfile: &mut File) -> io::Result<()> {
+pub fn process(key: &[u8; 32], mut plainfile: File, mut cipherfile: impl Write) -> io::Result<()> {
     let mut buffer = [0u8; 1024];
 
     loop {

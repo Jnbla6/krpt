@@ -8,15 +8,17 @@ use crate::takesfile::process;
 use crate::hashing_keys::hashingstring;
 use crate::hashing_keys::hashingvec;
 use crate::encrypt::encrypt_bytes;
+
 use std::io::{self, Write};
 use rand::{RngCore, rngs::OsRng};
+use base64::{engine::general_purpose, write::EncoderWriter};
 
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
-        eprintln!("no file file to encrypt");
+        eprintln!("no file to encrypt");
         eprintln!("Usage: cargo run <file_to_encrypt>");
         std::process::exit(1);
     }
@@ -46,11 +48,13 @@ fn main() {
     let plainfile = File::open(input_path).expect("Failed to open input file");
     let mut cipherfile = File::create(&output_path).expect("Failed to create output file");
 
-    cipherfile.write_all(&salt).expect("erorr cant add salting");
-    
-    process(&key, plainfile, &mut cipherfile).expect("Failed during encryption process");
+    let mut b64_writer = EncoderWriter::new(&mut cipherfile, &general_purpose::STANDARD);
 
-    cipherfile.write_all(&injectedhashmainkey).expect("error cannot inject the main key");
+    b64_writer.write_all(&salt).unwrap();
+    process(&key, plainfile, &mut b64_writer).unwrap();
+    b64_writer.write_all(&injectedhashmainkey).unwrap();
+
+    b64_writer.finish().unwrap();
 
 
 }
