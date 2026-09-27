@@ -1,6 +1,7 @@
 mod takesfile;
 mod encrypt;
 mod hashing_keys;
+mod stubinject;
 
 use std::fs::File;
 use std::env;
@@ -11,7 +12,7 @@ use crate::encrypt::encrypt_bytes;
 
 use std::io::{self, Write};
 use rand::{RngCore, rngs::OsRng};
-use base64::{engine::general_purpose, write::EncoderWriter};
+use crate::stubinject::{stub_inject};
 
 
 fn main() {
@@ -46,15 +47,23 @@ fn main() {
     let injectedhashmainkey = encrypt_bytes(&key, &hashedkey);
 
     let plainfile = File::open(input_path).expect("Failed to open input file");
-    let mut cipherfile = File::create(&output_path).expect("Failed to create output file");
 
-    let mut b64_writer = EncoderWriter::new(&mut cipherfile, &general_purpose::STANDARD);
+    let mut encrypted_payload = Vec::new();
+    process(&key, plainfile, &mut encrypted_payload).unwrap();
 
-    b64_writer.write_all(&salt).unwrap();
-    process(&key, plainfile, &mut b64_writer).unwrap();
-    b64_writer.write_all(&injectedhashmainkey).unwrap();
+    let payload_len = encrypted_payload.len() as u64;
+    let payload_size_bytes = payload_len.to_le_bytes();
 
-    b64_writer.finish().unwrap();
+    let mut final_payload = Vec::new();
+    final_payload.extend_from_slice(&salt);
+    final_payload.extend_from_slice(&encrypted_payload);
+    final_payload.extend_from_slice(&injectedhashmainkey);
+    final_payload.extend_from_slice(&payload_size_bytes);
 
+    let stub_bytes = include_bytes!("krpt_stub"); 
+
+    println!("building the final file...");
+
+    stub_inject(stub_bytes, &final_payload, &output_path);
 
 }
