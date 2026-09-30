@@ -37,9 +37,15 @@ jobs:
       - name: Rename and prepare binary
         shell: bash
         run: |
-          # Find the binary in the target directory and rename it properly
-          find target/${{ matrix.target }}/release -maxdepth 1 -type f -executable -not -name "*.d" -not -name "*.rlib" -exec cp {} ${{ matrix.asset_name }} \;
-          ls -la ${{ matrix.asset_name }}
+          # Handle binary naming for different platforms (adds .exe if windows, though we are using linux/mac)
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            mv target/${{ matrix.target }}/release/krpt.exe ${{ matrix.asset_name }}.exe
+          else
+            mv target/${{ matrix.target }}/release/krpt ${{ matrix.asset_name }}
+          fi
+          
+          # Verify the file was moved successfully
+          ls -la krpt-*
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
