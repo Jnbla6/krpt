@@ -55,7 +55,7 @@ Success! Executable text script generated at: <target_file.ext>.krpt
 4. Save the file and execute it directly from the terminal.
 
 ```text
-$ ./<target_file.ext>.krpt 
+$ ./<target_file.ext>
 Success! File decrypted successfully as: decrypted_file.out
 
 ```
