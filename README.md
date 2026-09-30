@@ -1,5 +1,4 @@
 <img width="800" height="450" alt="ezgif-4e7bb402e4c084b2" src="https://github.com/user-attachments/assets/219106e7-bdf9-4a91-8d1f-f05765010aba" />
-
 # krpt
 
 is A fast, secure command-line utility built in Rust that generates **standalone, self-decrypting executables**. `krpt` leverages a two-key envelope encryption architecture, AES-256 block ciphers, and PBKDF2 key derivation to package your data so it can be decrypted anywhere—without requiring the recipient to install `krpt` or any external dependencies.
