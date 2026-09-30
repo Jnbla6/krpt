@@ -35,7 +35,11 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
 
       - name: Rename and prepare binary
-        run: mv target/${{ matrix.target }}/release/krpt ${{ matrix.asset_name }}
+        shell: bash
+        run: |
+          # Find the binary in the target directory and rename it properly
+          find target/${{ matrix.target }}/release -maxdepth 1 -type f -executable -not -name "*.d" -not -name "*.rlib" -exec cp {} ${{ matrix.asset_name }} \;
+          ls -la ${{ matrix.asset_name }}
 
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
