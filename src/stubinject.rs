@@ -8,10 +8,11 @@ pub fn stub_inject(stub_bytes: &[u8], final_payload_bytes: &[u8], output_script_
     let mut out_file = File::create(output_script_path).expect("Failed to create output script");
     
     writeln!(out_file, "#!/bin/bash").unwrap();
-    writeln!(out_file, "PASSWORD=\"\"").unwrap();
-    writeln!(out_file, r#"
-if [ "$PASSWORD" = "" ] || [ -z "$PASSWORD" ]; then
-    echo "Error: Please open this file in a text editor and set the PASSWORD."
+    writeln!(out_file, "# ").unwrap();
+    writeln!(out_file, r##"
+    LINE_2=$(sed -n '2p' "$0")
+if [ "$LINE_2" = "#" ] || [ "$LINE_2" = "# " ] || [ -z "$LINE_2" ]; then
+    echo "Error: Please open this file in a text editor and set the PASSWORD on line 2."
     exit 1
 fi
 
@@ -22,14 +23,14 @@ PAYLOAD_PATH="$TMP_DIR/payload.bin"
 echo "{}" | base64 -d > "$STUB_PATH"
 chmod +x "$STUB_PATH"
 
-sed -n '/^__PAYLOAD_BEGIN__/,$p' "$0" | tail -n +2 | base64 -d > "$PAYLOAD_PATH"
+PASS=$(sed -n '2s/^#[[:space:]]*//p' "$0")
 
-"$STUB_PATH" "$PASSWORD" "$PAYLOAD_PATH"
+tail -n 1 "$0" | base64 -d > "$PAYLOAD_PATH"
+
+"$STUB_PATH" "$PASS" "$PAYLOAD_PATH"
 
 rm -rf "$TMP_DIR"
-exit 0
-
-__PAYLOAD_BEGIN__"#, stub_b64).unwrap();
+exit 0"##, stub_b64).unwrap();
 
     let payload_b64 = STANDARD.encode(final_payload_bytes);
     writeln!(out_file, "{}", payload_b64).unwrap();
