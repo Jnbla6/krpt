@@ -12,7 +12,7 @@ pub fn stub_inject(stub_bytes: &[u8], final_payload_bytes: &[u8], output_script_
     writeln!(out_file, r##"
     LINE_2=$(sed -n '2p' "$0")
 if [ "$LINE_2" = "#" ] || [ "$LINE_2" = "# " ] || [ -z "$LINE_2" ]; then
-    echo "Error: Please open this file in a text editor and set the PASSWORD on line 2."
+    echo "Error: Please open this file in a text editor and set the PASSWORD on line 2 after the (# )."
     exit 1
 fi
 
