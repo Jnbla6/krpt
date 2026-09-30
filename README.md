@@ -1,6 +1,6 @@
 # krpt
 
-A fast, secure command-line utility built in Rust that generates **standalone, self-decrypting executables**[cite: 1]. `krpt` leverages a two-key envelope encryption architecture, AES-256 block ciphers, and PBKDF2 key derivation to package your data so it can be decrypted anywhere—without requiring the recipient to install `krpt` or any external dependencies[cite: 1].
+A fast, secure command-line utility built in Rust that generates **standalone, self-decrypting executables**. `krpt` leverages a two-key envelope encryption architecture, AES-256 block ciphers, and PBKDF2 key derivation to package your data so it can be decrypted anywhere—without requiring the recipient to install `krpt` or any external dependencies.
 
 ## The Philosophy: Minimalist Execution
 
@@ -12,8 +12,8 @@ The recipient does not install software. They do not run a setup script. They si
 
 * **Zero-Dependency Air-Gap Support:** The self-contained nature of the compiled payload makes it perfect for highly restricted or air-gapped environments. Transport the encrypted file via USB and decrypt it on a target machine with no internet access and no pre-installed libraries.
 * **Envelope Encryption (Two-Key Methodology):** Implements industry best practices by separating the Data Encryption Key (Main Key) from the Key Encryption Key (Second Key) for superior cryptographic isolation.
-* **Cryptographic Hardening:** Powered by `src/hashing_keys.rs`[cite: 1], the utility enforces PBKDF2 (Password-Based Key Derivation Function 2) and cryptographic salting. This intentionally delays key derivation, making brute-force and dictionary attacks computationally unfeasible.
-* **Dynamic Binary Injection:** Rather than outputting standard ciphertext, `src/stubinject.rs` injects the encrypted payload directly into a pre-compiled Rust binary stub (`krpt_stub`)[cite: 1].
+* **Cryptographic Hardening:** Powered by `src/hashing_keys.rs`, the utility enforces PBKDF2 (Password-Based Key Derivation Function 2) and cryptographic salting. This intentionally delays key derivation, making brute-force and dictionary attacks computationally unfeasible.
+* **Dynamic Binary Injection:** Rather than outputting standard ciphertext, `src/stubinject.rs` injects the encrypted payload directly into a pre-compiled Rust binary stub (`krpt_stub`).
 * **Memory-Safe Cryptography:** Built entirely in Rust, the execution is protected from standard buffer overflows or memory leaks during the encryption and decryption cycles.
 
 ## The Two-Key Methodology (Envelope Encryption)
@@ -66,7 +66,7 @@ Success! File decrypted successfully as: decrypted_file.out
 
 The project is strictly modularized to separate core cryptographic operations from payload generation:
 
-* **`src/stubinject.rs` & `src/krpt_stub**`: Handles the binary injection, binding the encrypted data into the executable engine[cite: 1].
-* **`src/encrypt.rs`**: Manages the core AES-256 block cipher implementation for both the Envelope and Data encryption[cite: 1].
-* **`src/hashing_keys.rs`**: Handles PBKDF2 key derivation and salting logic to harden the Second Key[cite: 1].
-* **`src/takesfile.rs`**: Manages the I/O ingestion of the target files[cite: 1].
+* **`src/stubinject.rs` & `src/krpt_stub**`: Handles the binary injection, binding the encrypted data into the executable engine.
+* **`src/encrypt.rs`**: Manages the core AES-256 block cipher implementation for both the Envelope and Data encryption.
+* **`src/hashing_keys.rs`**: Handles PBKDF2 key derivation and salting logic to harden the Second Key.
+* **`src/takesfile.rs`**: Manages the I/O ingestion of the target files.
