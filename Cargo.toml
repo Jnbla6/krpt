@@ -2,6 +2,7 @@
 name = "krpt"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/Jnbla6/krpt"
 
 [dependencies]
 rand = "0.8"
@@ -9,3 +10,8 @@ aes = "0.8"
 ecb = "0.1"
 sha2 = "0.10"
 base64 = "0.21"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
