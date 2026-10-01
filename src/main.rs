@@ -20,7 +20,7 @@ fn main() {
 
     if args.len() < 2 {
         eprintln!("no file to encrypt");
-        eprintln!("Usage: cargo run <file_to_encrypt>");
+        eprintln!("Usage: krpt <file_to_encrypt>");
         std::process::exit(1);
     }
 
@@ -28,16 +28,18 @@ fn main() {
     let output_path = format!("{}.krpt", input_path);
 
     let mut frstpass = String::new();
-    println!("enter the main key to encrypt the file");
+    print!("> Enter the MAIN KEY (to encrypt the file payload): ");
     io::stdout().flush().unwrap();
     io::stdin().read_line(&mut frstpass).expect("failed to read the key");
     let key = hashingstring(frstpass.trim().to_string());
 
     let mut secpass = String::new();
-    println!("enter the second key to encrypt the main key");
-    println!("note! that you will use this key to decrypt the file");
+    println!();
+    print!("> Enter the ACCESS KEY (to lock the Main Key): ");
     io::stdout().flush().unwrap();
     io::stdin().read_line(&mut secpass).expect("failed to read the key");
+
+    println!("  [!] IMPORTANT: The recipient only needs this ACCESS KEY to decrypt the file.");
 
     let mut salt = [0u8; 16];
     OsRng.fill_bytes(&mut salt);
