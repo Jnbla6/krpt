@@ -2,7 +2,7 @@
 
 # krpt
 
-is A fast, secure command-line utility built in Rust that generates **standalone, self-decrypting executables**. `krpt` leverages a two-key envelope encryption architecture, AES-256 block ciphers, and PBKDF2 key derivation to package your data so it can be decrypted anywhere—without requiring the recipient to install `krpt` or any external dependencies.
+A fast, secure command-line utility built in Rust that generates **standalone, self-decrypting executables**. `krpt` leverages a two-key envelope encryption architecture, AES-256 block ciphers, and PBKDF2 key derivation to package your data so it can be decrypted anywhere—without requiring the recipient to install `krpt` or any external dependencies.
 
 ## The Philosophy: Minimalist Execution
 
@@ -27,16 +27,23 @@ To ensure maximum security and prevent cryptanalysis against your primary data, 
 
 By never using the user's password to encrypt large volumes of data, it severely limits an attacker's ability to perform known-plaintext attacks.
 
+## Installation
+
+Install `krpt` 0.1.0 globally via the automated shell script to fetch the prebuilt binaries directly to your system:
+
+```bash
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/Jnbla6/krpt/releases/download/v0.1.0/krpt-installer.sh | sh
+
+```
+
 ## Usage: The Two-Step Lifecycle
 
 ### 1. Encrypting a File
 
-Pass your target file into `krpt`. The interactive CLI will prompt you for both keys and automatically build your self-decrypting payload.
+Pass your target file into the globally installed `krpt` command. The interactive CLI will prompt you for both keys and automatically build your self-decrypting payload.
 
 ```text
-$ cargo run <target_file.ext>
-    Finished `release` profile [optimized] target(s) in 0.02s
-     Running `target/release/krypt <target_file.ext>`
+$ krpt <target_file.ext>
 enter the main key to encrypt the file
 <YOUR_MAIN_KEY>
 enter the second key to encrypt the main key
@@ -52,12 +59,12 @@ Success! Executable text script generated at: <target_file.ext>.krpt
 **The recipient only needs to know the Second Key** (`<YOUR_ACCESS_KEY>`).
 
 1. Open the generated `.krpt` file in any standard text editor (nano, vim, notepad, etc.).
-2. Navigate to **line 2** and locate the `(# )` marker.
-3. Insert your **Second Key (Access Key)** directly after the marker (e.g., `(# <YOUR_ACCESS_KEY>)`).
+2. Navigate to **line 2** and locate the `# ` marker.
+3. Insert your **Second Key (Access Key)** directly after the marker on that same line (e.g., `# 123`).
 4. Save the file and execute it directly from the terminal.
 
 ```text
-$ ./<target_file.ext>
+$ ./<target_file.ext>.krpt 
 Success! File decrypted successfully as: decrypted_file.out
 
 ```
