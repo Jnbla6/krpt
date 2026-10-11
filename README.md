@@ -14,8 +14,7 @@ The recipient does not install software. They do not run a setup script. They si
 
 * **Zero-Dependency Air-Gap Support:** The self-contained nature of the compiled payload makes it perfect for highly restricted or air-gapped environments. Transport the encrypted file via USB and decrypt it on a target machine with no internet access and no pre-installed libraries.
 * **Envelope Encryption (Two-Key Methodology):** Implements industry best practices by separating the Data Encryption Key (Main Key) from the Key Encryption Key (Second Key) for superior cryptographic isolation.
-* **Cryptographic Hardening:** Powered by `src/hashing_keys.rs`, the utility enforces PBKDF2 (Password-Based Key Derivation Function 2) and cryptographic salting. This intentionally delays key derivation, making brute-force and dictionary attacks computationally unfeasible.
-* **Dynamic Binary Injection:** Rather than outputting standard ciphertext, `src/stubinject.rs` injects the encrypted payload directly into a pre-compiled Rust binary stub (`krpt_stub`).
+* **Binary Injection:** Rather than outputting standard ciphertext, `src/stubinject.rs` injects the encrypted payload directly into a pre-compiled Rust binary stub (`krpt_stub`).
 * **Memory-Safe Cryptography:** Built entirely in Rust, the execution is protected from standard buffer overflows or memory leaks during the encryption and decryption cycles.
 
 ## The Two-Key Methodology (Envelope Encryption)
@@ -29,7 +28,7 @@ By never using the user's password to encrypt large volumes of data, it severely
 
 ## Installation
 
-Install `krpt` 0.1.0 globally via the automated shell script to fetch the prebuilt binaries directly to your system:
+Install `krpt` via the shell script to fetch the prebuilt binaries directly to your system:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -LsSf https://github.com/Jnbla6/krpt/releases/download/v0.1.0/krpt-installer.sh | sh
