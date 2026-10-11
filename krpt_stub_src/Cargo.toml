@@ -1,0 +1,16 @@
+[package]
+name = "krpt_stub"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+aes = "0.8"
+ecb = "0.1"
+sha2 = "0.10"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
